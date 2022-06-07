@@ -1,5 +1,9 @@
 name: Run tests
 
+env:
+  LD_LIBRARY_PATH: /tmp
+  PACT_GO_LIB_DOWNLOAD_PATH: /tmp
+
 on:
   push:
     branches: [ "main" ]
@@ -19,10 +23,10 @@ jobs:
         go-version: 1.17.6
 
     - name: Install pact-go as a dev dependency
-      run: GOBIN=$PWD/build go install github.com/pact-foundation/pact-go/v2@2.x.x
+      run: GOBIN=./build go install github.com/pact-foundation/pact-go/v2@2.x.x
 
     - name: Download and install the required libraries
-      run: sudo $PWD/build/pact-go -l DEBUG install
+      run: ./build/pact-go -l DEBUG install --libDir /tmp
 
     - name: Run consumer test
       run:  go test -run ^TestConsumerV3$ .
