@@ -23,10 +23,10 @@ jobs:
         go-version: 1.17.6
 
     - name: Install pact-go as a dev dependency
-      run: GOBIN=./build go install github.com/pact-foundation/pact-go/v2@2.x.x
+      run: GOBIN=$PWD/build go install github.com/pact-foundation/pact-go/v2@2.x.x
 
     - name: Download and install the required libraries
-      run: ./build/pact-go -l DEBUG install --libDir /tmp
+      run: $PWD/build/pact-go -l DEBUG install --libDir /tmp
 
     - name: Run consumer test
       run:  go test -run ^TestConsumerV3$ .
