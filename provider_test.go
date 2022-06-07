@@ -48,7 +48,6 @@ func TestV3HTTPProvider(t *testing.T) {
 		// BrokerURL:       os.Getenv("PACT_BROKER_BASE_URL"),
 		PactFiles: []string{
 			filepath.ToSlash(fmt.Sprintf("%s/PactGoV3Consumer-V3Provider.json", pactDir)),
-			filepath.ToSlash(fmt.Sprintf("%s/PactGoV2ConsumerMatch-V2ProviderMatch.json", pactDir)),
 		},
 		// ConsumerVersionSelectors: []Selector{
 		// 	&ConsumerVersionSelector{

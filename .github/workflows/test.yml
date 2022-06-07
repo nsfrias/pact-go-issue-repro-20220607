@@ -13,7 +13,10 @@ on:
 jobs:
 
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-12, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
 
@@ -26,10 +29,35 @@ jobs:
       run: GOBIN=$PWD/build go install github.com/pact-foundation/pact-go/v2@2.x.x
 
     - name: Download and install the required libraries
-      run: $PWD/build/pact-go -l DEBUG install --libDir /tmp
+      run: |
+        [[ "${{ matrix.os }}" == "ubuntu-latest" ]] && LIBPACT_DIR=/tmp || LIBPACT_DIR=/usr/local/lib
+        echo "libpact_ffi is located in $LIBPACT_DIR"
+        sudo $PWD/build/pact-go -l DEBUG install --libDir $LIBPACT_DIR
+
+    - name: Change ownership of libpact_ffi
+      run: >
+        [[ "${{ matrix.os }}" == "ubuntu-latest" ]] && sudo chown $USER /tmp/libpact_ffi.* || true
 
     - name: Run consumer test
-      run:  go test -run ^TestConsumerV3$ .
+      run:  go test -run ^TestConsumerV3$ consumer_test.go -v
 
-    - name: Run provider test
-      run:  go test -tags provider -run ^TestV3HTTPProvider$
+    - name: Run provider test 6 times
+      run: |
+        echo "1st attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+        echo "==========================================================="
+        echo "2nd attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+        echo "==========================================================="
+        echo "3rd attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+        echo "==========================================================="
+        echo "4th attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+        echo "==========================================================="
+        echo "5th attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+        echo "==========================================================="
+        echo "6th attempt"
+        go test -timeout 30s -run ^TestV3HTTPProvider$ . -v
+
