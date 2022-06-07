@@ -19,10 +19,10 @@ jobs:
         go-version: 1.17.6
 
     - name: Install pact-go as a dev dependency
-      run: go get github.com/pact-foundation/pact-go/v2@2.x.x
+      run: go install github.com/pact-foundation/pact-go/v2@2.x.x
 
-    - name: download and install the required libraries
-      run: pact-go -l DEBUG install
+    - name: Download and install the required libraries
+      run: sudo pact-go -l DEBUG install
 
     - name: Run consumer test
       run:  go test -run ^TestConsumerV3$ .
