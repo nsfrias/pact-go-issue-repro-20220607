@@ -22,7 +22,11 @@ jobs:
       run: GOBIN=$PWD/build go install github.com/pact-foundation/pact-go/v2@2.x.x
 
     - name: Download and install the required libraries
+<<<<<<< HEAD:.github/workflows/test.yml
       run: sudo $PWD/build/pact-go -l DEBUG install
+=======
+      run: $PWD/build/pact-go -l DEBUG install
+>>>>>>> 967f5c1f190095d3dec0490311aa8023dba52009:.github/workflows/go.yml
 
     - name: Run consumer test
       run:  go test -run ^TestConsumerV3$ .
